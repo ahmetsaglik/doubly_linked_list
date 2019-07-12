@@ -1,0 +1,181 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct node{
+	int data;
+	node * next;
+	node * prev;
+}node;
+
+node * add_to_end(node *r,int x)
+{
+	if(r==NULL)
+	{
+		r=(node *)malloc(sizeof(node));
+		r->data = x;
+		r->next = NULL;
+		r->prev = NULL;
+		return r;
+	}
+	else if(r->next==NULL)
+	{
+		node * temp = (node *)malloc(sizeof(node));
+		temp->data = x;
+		r->next=temp;
+		temp->next = NULL;
+		temp->prev = r;
+		return r;
+	}
+	else
+	{
+		node *iter=r;
+		node * temp = (node *)malloc(sizeof(node));
+		temp->data = x;
+		while(iter->next!=NULL)
+		{
+			iter = iter->next;
+		}
+		iter->next = temp;
+		temp->next = NULL;
+		temp->prev = iter;
+		return r;
+	}
+}
+
+node * add_to_top(node *r,int x)
+{
+	node * temp = (node *)malloc(sizeof(node));
+	temp->data = x;
+	temp->next = r;
+	r->prev = temp;
+	temp->prev = NULL;
+	return temp;
+}
+
+void insert(node *r,int x,int y)
+{
+	node * iter=r;
+	while(iter->data!=x)
+	{
+		iter = iter->next;
+	}
+	node * temp = (node *)malloc(sizeof(node));
+	temp->data = y;
+	node *tut = iter->next;
+	temp->next=tut;
+	temp->prev=iter;
+	iter->next=temp;
+	tut->prev=temp;
+}
+
+node * deletion(node *r,int x)
+{
+	node * iter = r;
+	if(iter->data==x)
+	{
+		node * temp = iter;
+		iter=iter->next;
+		free(temp);
+		iter->prev = NULL;
+		return iter;
+	}
+	else
+	{
+		while(iter->next->data !=x)
+		{
+			iter = iter->next;
+		}
+		node * temp = iter->next;
+		node * tut = iter->next->next;
+		iter->next = tut;
+		tut->prev = iter;
+		free(temp);
+		return r;
+	}
+}
+
+node * sequential_insert(node *r,int x)
+{
+	node *iter = r;
+	if(r==NULL)
+	{
+		r = (node *)malloc(sizeof(node));
+		r->data = x;
+		r->next = NULL;
+		r->prev = NULL;
+		return r;
+	}
+	else if(r->next==NULL && r->data>x)
+	{
+		node * temp = (node *)malloc(sizeof(node));
+		temp->data = x;
+		temp->next = r;
+		temp->prev = NULL;
+		r->prev = temp;
+		return temp;
+	}
+	else
+	{
+		while(iter->next->data<x)
+		{
+			iter = iter->next;
+		}
+		node * temp = (node *)malloc(sizeof(node));
+		temp->data = x;
+		node *tut = iter->next;
+		iter->next = temp;
+		temp->next = tut;
+		tut->prev = temp;
+		temp->prev = iter;
+		return r;
+	}
+}
+
+void print_from_the_end(node *r)
+{
+	while(r->next!=NULL)
+	{
+		r=r->next;
+	}
+	while(r!=NULL)
+	{
+		printf("%d->",r->data);
+		r = r->prev;
+	}
+}
+
+void printover(node *r)
+{
+	while(r!=NULL)
+	{
+		printf("%d->",r->data);
+		r=r->next;
+	}
+}
+
+
+int main()
+{
+	node *root = NULL;
+	root = add_to_end(root,10);
+	root = add_to_end(root,11);
+	root = add_to_end(root,12);
+	root = add_to_end(root,13);
+	root = add_to_end(root,50);
+	root = add_to_end(root,15);
+	root = add_to_end(root,9);
+	root = add_to_end(root,8);
+	root = add_to_end(root,7);
+	insert(root,13,14);
+	root = deletion(root,50);
+	print_from_the_end(root);
+	printf("\n");
+	printover(root);
+	root = deletion(root,10);
+	root = deletion(root,7);
+	printf("\n");
+	printf("\n");
+	print_from_the_end(root);
+	printf("\n");
+	printover(root);
+}
